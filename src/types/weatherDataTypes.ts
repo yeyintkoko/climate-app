@@ -68,8 +68,8 @@ export enum Units {
 }
 
 export enum WeatherAPI {
-  OpenWeatherMap = 'Open Weather Map',
-  WeatherStack = 'Weather Stack',
+  OpenWeatherMap = 'OpenWeatherMap',
+  WeatherStack = 'WeatherStack',
   Climacell = 'Climacell',
 }
 

@@ -9,13 +9,21 @@ import { useNavigation } from './useNavigation';
 
 export const useWeatherInfo = () => {
   const [weatherInfo, setWeatherInfo] = useState<WeatherInfo | null>(null);
-  const { api, changeApi, unit, setUnit, cityName, setCityName } =
-    useNavigation();
+  const {
+    api,
+    changeApi,
+    unit,
+    setUnit,
+    cityName,
+    setCityName,
+    currentScreen,
+  } = useNavigation();
 
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState('');
   const fallbackRef = useRef<Set<string>>(new Set());
+  const apiRef = useRef<WeatherAPI>(api);
 
   const handleResponse = (data: WeatherInfo): void => {
     setWeatherInfo(data);
@@ -32,27 +40,32 @@ export const useWeatherInfo = () => {
   };
 
   const handleFallback = useCallback(() => {
-    if (!fallbackRef.current.has(api)) {
-      fallbackRef.current.add(api);
+    if (currentScreen === 'Settings') {
+      // Disable fallback when selecting weather providers.
+      return;
+    }
+    if (!fallbackRef.current.has(apiRef.current)) {
+      fallbackRef.current.add(apiRef.current);
       const apis: WeatherAPI[] = Object.values(WeatherAPI);
       const nextApi = apis.find(it => !fallbackRef.current.has(it));
       if (nextApi) {
         changeApi(nextApi);
       }
     }
-  }, [api, changeApi]);
+  }, [changeApi, currentScreen]);
 
-  const clearFallback = (fallbacks: Set<string>) => {
-    fallbacks.clear();
+  const clearFallback = () => {
+    fallbackRef.current.clear();
   };
 
   const getWeatherByCity = useCallback(async () => {
     try {
       const data = await fetchWeatherByCity(cityName, unit, api);
       handleResponse(data);
-      clearFallback(fallbackRef.current);
+      clearFallback();
     } catch (err) {
       handleError(err);
+      apiRef.current = api;
       handleFallback();
     } finally {
       setLoading(false);
@@ -70,9 +83,10 @@ export const useWeatherInfo = () => {
         api,
       );
       handleResponse(data);
-      clearFallback(fallbackRef.current);
+      clearFallback();
     } catch (err) {
       handleError(err);
+      apiRef.current = api;
       handleFallback();
     } finally {
       setLoading(false);
