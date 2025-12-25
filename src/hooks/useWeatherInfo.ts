@@ -1,5 +1,5 @@
-import { useCallback, useEffect, useState } from 'react';
-import { WeatherInfo } from '../types/weatherDataTypes';
+import { useCallback, useEffect, useRef, useState } from 'react';
+import { WeatherAPI, WeatherInfo } from '../types/weatherDataTypes';
 import {
   fetchWeatherByCity,
   fetchWeatherByCoordinates,
@@ -15,6 +15,7 @@ export const useWeatherInfo = () => {
   const [loading, setLoading] = useState(false);
   const [refreshing, setRefreshing] = useState(false);
   const [error, setError] = useState('');
+  const fallbackRef = useRef<Set<string>>(new Set());
 
   const handleResponse = (data: WeatherInfo): void => {
     setWeatherInfo(data);
@@ -30,22 +31,38 @@ export const useWeatherInfo = () => {
     setWeatherInfo(null);
   };
 
+  const handleFallback = useCallback(() => {
+    if (!fallbackRef.current.has(api)) {
+      fallbackRef.current.add(api);
+      const apis: WeatherAPI[] = Object.values(WeatherAPI);
+      const nextApi = apis.find(it => !fallbackRef.current.has(it));
+      if (nextApi) {
+        changeApi(nextApi);
+      }
+    }
+  }, [api, changeApi]);
+
+  const clearFallback = (fallbacks: Set<string>) => {
+    fallbacks.clear();
+  };
+
   const getWeatherByCity = useCallback(async () => {
     try {
       const data = await fetchWeatherByCity(cityName, unit, api);
       handleResponse(data);
+      clearFallback(fallbackRef.current);
     } catch (err) {
       handleError(err);
+      handleFallback();
     } finally {
       setLoading(false);
       setRefreshing(false);
     }
-  }, [unit, cityName, api]);
+  }, [cityName, unit, api, handleFallback]);
 
   const getWeatherByCurrentLocation = useCallback(async () => {
     try {
       const { latitude, longitude } = await getCurrentLocation();
-      console.log({ latitude, longitude });
       const data = await fetchWeatherByCoordinates(
         latitude,
         longitude,
@@ -53,13 +70,15 @@ export const useWeatherInfo = () => {
         api,
       );
       handleResponse(data);
+      clearFallback(fallbackRef.current);
     } catch (err) {
       handleError(err);
+      handleFallback();
     } finally {
       setLoading(false);
       setRefreshing(false);
     }
-  }, [unit, api]);
+  }, [unit, api, handleFallback]);
 
   const getWeatherInfo = useCallback(() => {
     if (cityName) {
@@ -80,8 +99,12 @@ export const useWeatherInfo = () => {
   }, [getWeatherInfo]);
 
   useEffect(() => {
-    getWeather();
-  }, [getWeather]);
+    // Here, getWeather shoud be called only when screen loaded.
+    // To prevent calling api on effect of cityName change on every key press in search input.
+    if (!cityName) {
+      getWeather();
+    }
+  }, [cityName, getWeather]);
 
   return {
     weatherInfo,

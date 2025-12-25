@@ -49,6 +49,9 @@ const Home = () => {
           <TextInput
             style={styles.searchInput}
             placeholder="Search city"
+            autoComplete="off"
+            autoCapitalize="none"
+            autoCorrect={false}
             value={cityName}
             onChangeText={setCityName}
             onSubmitEditing={getWeatherByCity}
