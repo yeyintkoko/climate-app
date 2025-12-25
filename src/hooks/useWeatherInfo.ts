@@ -45,6 +45,7 @@ export const useWeatherInfo = () => {
   const getWeatherByCurrentLocation = useCallback(async () => {
     try {
       const { latitude, longitude } = await getCurrentLocation();
+      console.log({ latitude, longitude });
       const data = await fetchWeatherByCoordinates(
         latitude,
         longitude,
