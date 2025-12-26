@@ -9,3 +9,9 @@
 3. Implemented UIs.
 
 4. Implemented Provider.
+
+5. Implemeted native turbo modules for current location.
+
+6. Added animated loading component.
+
+7. Fix side effects issues and ui inconsistency issues.

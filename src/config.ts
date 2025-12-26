@@ -15,8 +15,8 @@ export const ClimacellUnitMap = {
   [Units.Fahrenheit]: 'imperial',
 };
 
-export const OPEN_WEATHER_MAP_API_KEY = 'b7f149da5e28ee632b8cc1cb2445609c';
-export const WEATHERSTACK_API_KEY = 'd2fe745fe80884124a4c9fb5d59bfbe1';
+export const OPEN_WEATHER_MAP_API_KEY = 'b80524b41f3ced960cdbf36268e8f1c4';
+export const WEATHERSTACK_API_KEY = '4cd9fe7e59a29e106c4c0d3ae47c1e09';
 export const CLIMACELL_API_KEY = 'k7yiwLvKZ3NV1DTeqC9mAnKfMnrEYil8';
 
 export const OPEN_WEATHER_MAP_URL =
