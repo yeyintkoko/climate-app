@@ -40,10 +40,6 @@ export const useWeatherInfo = () => {
   };
 
   const handleFallback = useCallback(() => {
-    if (currentScreen === 'Settings') {
-      // Disable fallback when selecting weather providers.
-      return;
-    }
     if (!fallbackRef.current.has(apiRef.current)) {
       fallbackRef.current.add(apiRef.current);
       const apis: WeatherAPI[] = Object.values(WeatherAPI);
@@ -52,7 +48,7 @@ export const useWeatherInfo = () => {
         changeApi(nextApi);
       }
     }
-  }, [changeApi, currentScreen]);
+  }, [changeApi]);
 
   const clearFallback = () => {
     fallbackRef.current.clear();
@@ -113,12 +109,12 @@ export const useWeatherInfo = () => {
   }, [getWeatherInfo]);
 
   useEffect(() => {
-    // Here, getWeather shoud be called only when screen loaded.
-    // To prevent calling api on effect of cityName change on every key press in search input.
-    if (!cityName) {
-      getWeather();
+    if (currentScreen === 'Settings') {
+      // No need to fetch api on Settings.
+      return;
     }
-  }, [cityName, getWeather]);
+    getWeather();
+  }, [currentScreen, getWeather]);
 
   return {
     weatherInfo,
@@ -135,5 +131,6 @@ export const useWeatherInfo = () => {
     getWeatherByCurrentLocation,
     getWeather,
     error,
+    clearFallback,
   };
 };

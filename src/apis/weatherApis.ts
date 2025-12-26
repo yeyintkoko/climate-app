@@ -31,6 +31,10 @@ const fetchWeather = async (url: string) => {
 const handleOpenWeatherMapResponse = (
   data: OpenWeatherMapResponse,
 ): WeatherInfo => {
+  if (data?.message) {
+    throw new Error(`OPEN WEATHER MAP - OpenWeatherMap: ${data.message}`);
+  }
+
   if (!data || !data.main || !data.weather) {
     throw new Error('Invalid data received from OpenWeatherMap API.');
   }
@@ -47,6 +51,10 @@ const handleOpenWeatherMapResponse = (
 const handleWeatherStuckResponse = (
   data: WeatherStackResponse,
 ): WeatherInfo => {
+  if (data?.error) {
+    throw new Error(`WEATHER STACK - ${data.error.info}`);
+  }
+
   if (!data || !data.current) {
     throw new Error('Invalid data received from WeatherStack API.');
   }
@@ -63,6 +71,10 @@ const handleWeatherStuckResponse = (
 const handleCalimacellResponse = async (
   data: ClimacellResponse,
 ): Promise<WeatherInfo> => {
+  if (data?.message) {
+    throw new Error(`CLIMACELL -  ${data.message}`);
+  }
+
   if (!data || !data.data || !data.data.values) {
     throw new Error('Invalid data received from Climacell API.');
   }

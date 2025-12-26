@@ -12,6 +12,7 @@ export interface OpenWeatherMapResponse {
   wind: {
     speed: number;
   };
+  message?: string;
 }
 
 export interface WeatherStackResponse {
@@ -23,6 +24,9 @@ export interface WeatherStackResponse {
     weather_descriptions: string[];
     humidity: number;
     wind_speed: number;
+  };
+  error?: {
+    info: string;
   };
 }
 
@@ -40,6 +44,7 @@ export interface ClimacellResponse {
     lat: number;
     lon: number;
   };
+  message?: string;
 }
 
 export type WeatherResponse = OpenWeatherMapResponse &
