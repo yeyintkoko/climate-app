@@ -1,12 +1,15 @@
 import React from 'react';
 import { View, Platform, StatusBar, StyleSheet, ViewStyle } from 'react-native';
 
-interface Props {
+interface SafeAreaViewProps {
   children: React.ReactNode;
   style?: ViewStyle;
 }
 
-const SafeAreaView = ({ children, style }: Props) => {
+const SafeAreaView: React.FC<SafeAreaViewProps> = ({
+  children,
+  style,
+}: SafeAreaViewProps) => {
   return <View style={[styles.safeArea, style]}>{children}</View>;
 };
 

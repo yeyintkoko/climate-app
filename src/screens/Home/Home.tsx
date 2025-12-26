@@ -4,7 +4,6 @@ import {
   Text,
   ScrollView,
   RefreshControl,
-  ActivityIndicator,
   TouchableOpacity,
   TextInput,
   Image,
@@ -13,6 +12,7 @@ import styles from './styles';
 import { useWeatherInfo } from '../../hooks/useWeatherInfo';
 import { Units } from '../../types/weatherDataTypes';
 import { useNavigation } from '../../hooks/useNavigation';
+import ClimateLoader from '../../components/ClimateLoader/ClimateLoader';
 
 const Home = () => {
   const {
@@ -146,7 +146,7 @@ const Home = () => {
       </ScrollView>
       {loading && (
         <View style={styles.loadingOverlay}>
-          <ActivityIndicator size="large" color="#1E90FF" />
+          <ClimateLoader />
         </View>
       )}
     </View>
