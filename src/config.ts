@@ -21,7 +21,7 @@ export const CLIMACELL_API_KEY = 'k7yiwLvKZ3NV1DTeqC9mAnKfMnrEYil8';
 
 export const OPEN_WEATHER_MAP_URL =
   'https://api.openweathermap.org/data/2.5/weather';
-export const WEATHERSTACK_URL = 'http://api.weatherstack.com/current';
+export const WEATHERSTACK_URL = 'https://api.weatherstack.com/current';
 // Formerly ClimaCell is now Tomorrow.io
 export const CLIMACELL_URL = 'https://api.tomorrow.io/v4/weather/realtime';
 
